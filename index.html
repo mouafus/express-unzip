@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test form</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        form {
+            width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+    </style>
+</head>
+<body>
+<form
+        id="form"
+        method="post"
+        enctype="multipart/form-data"
+>
+    <input type="file" name="file" id="file" accept="application/zip">
+
+    <button type="submit" id="button">Upload</button>
+</form>
+</body>
+<script>
+    const form = document.getElementById('form');
+    const button = document.getElementById('button');
+    const file = document.getElementById('file');
+
+    button.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+        formData.append('file', file.files[0]);
+
+        fetch('http://localhost:8003/unzip', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(result => {
+                console.log('Success:', result);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+</script>
+</html>
